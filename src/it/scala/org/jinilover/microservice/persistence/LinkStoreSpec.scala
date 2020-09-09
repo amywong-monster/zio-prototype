@@ -33,28 +33,28 @@ object LinkStoreSpec extends DefaultRunnableSpec {
     testM(
       "test `add` function - should add 1 link and handle uniqueKey violation or retrieve the link correctly"
     ) {
-      val simon = UserId("simon")
-      val philip = UserId("philip")
+      val agda = UserId("agda")
+      val idris = UserId("idris")
 
       val result: Task[(Boolean, Boolean)] =
         for {
           _       <- createSchema
           store   <- storeIO
-          find1   <- store.getByUniqueKey(simon, philip)
-          find2   <- store.getByUniqueKey(philip, simon)
+          find1   <- store.getByUniqueKey(agda, idris)
+          find2   <- store.getByUniqueKey(idris, agda)
           linkExists1 = find1.isDefined || find2.isDefined
 
           instant <- ZIO.accessM[Clock](_.get.instant).provideLayer(Clock.live)
           _       <- store.add(
                        Link(
-                         initiatorId = simon,
-                         targetId = philip,
+                         initiatorId = agda,
+                         targetId = idris,
                          status = LinkStatus.Pending,
                          creationDate = instant
                        )
                      )
-          find3   <- store.getByUniqueKey(simon, philip)
-          find4   <- store.getByUniqueKey(philip, simon)
+          find3   <- store.getByUniqueKey(agda, idris)
+          find4   <- store.getByUniqueKey(idris, agda)
           linkExists2 = find3.isDefined || find4.isDefined
         } yield (linkExists1, linkExists2)
 

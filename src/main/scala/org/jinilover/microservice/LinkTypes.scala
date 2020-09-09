@@ -3,8 +3,6 @@ package microservice
 
 import java.time.Instant
 
-import io.circe.generic.semiauto.{ deriveDecoder, deriveEncoder }
-import io.circe.{ Decoder, Encoder }
 import scalaz.{ @@, Tag }
 
 object LinkTypes {
@@ -14,24 +12,14 @@ object LinkTypes {
   type LinkId = String @@ LinkId.Marker
   object LinkId extends Tagger[String]
 
-  implicit def taggedTypeEncoder[A, T](implicit EA: Encoder[A]): Encoder[A @@ T] =
-    EA.contramap(Tag.unwrap)
-
-  implicit def taggedTypeDecoder[A, T](implicit DA: Decoder[A]): Decoder[A @@ T] =
-    DA.map(Tag.apply[A, T])
+  //TODO add generic taggedtype circe codec for subsequent microservice reqt
 
   sealed trait LinkStatus
   object LinkStatus {
     case object Pending extends LinkStatus
     case object Accepted extends LinkStatus
 
-    implicit def linkStatusEncoder: Encoder[LinkStatus] =
-      implicitly[Encoder[String]].contramap(_.toString)
-
-    implicit def linkStatusDecoder: Decoder[LinkStatus] =
-      implicitly[Decoder[String]].map { s =>
-        if (Pending.toString == s) Pending else Accepted
-      }
+    //TODO add `LinkStatus` circe codec for subsequent microservice reqt
   }
 
   case class Link(
@@ -45,8 +33,7 @@ object LinkTypes {
   )
 
   object Link {
-    implicit val linkEncoder: Encoder[Link] = deriveEncoder
-    implicit val linkDecoder: Decoder[Link] = deriveDecoder
+    //TODO add `Link` circe codec for subsequent microservice reqt
   }
 
   case class SearchLinkCriteria(

@@ -6,7 +6,6 @@ version := "0.1"
 
 scalaVersion := "2.12.7"
 
-
 organization := "org.jinilover"
 
 libraryDependencies ++= Dependencies.compile ++ Dependencies.test
