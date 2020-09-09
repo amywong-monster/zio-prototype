@@ -12,7 +12,7 @@ import scalaz.{ @@, Tag }
 import doobie._
 import doobie.implicits.javasql._
 
-import zio._
+import zio.Task
 import zio.interop.catz._
 
 import ConfigTypes.DbConfig
@@ -34,7 +34,7 @@ object Doobie {
   implicit val UserIdMeta: Meta[UserId] =
     taggedMeta[String, UserId.Marker]
 
-  def transactor_(dbConfig: DbConfig): Transactor[Task] =
+  def transactor(dbConfig: DbConfig): Transactor[Task] =
     Transactor
       .fromDriverManager[Task]("org.postgresql.Driver", dbConfig.url, dbConfig.user, dbConfig.password)
 }
