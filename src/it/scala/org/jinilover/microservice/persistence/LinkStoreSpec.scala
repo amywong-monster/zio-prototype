@@ -13,8 +13,11 @@ import zio.test.Assertion._
 import org.jinilover.microservice.config.ConfigLoader
 import org.jinilover.microservice.ConfigTypes._
 import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus, UserId }
-import org.jinilover.microservice.persistence.DBUtiils.createSchema
+import org.jinilover.microservice.persistence.DBUtils.createSchema
 
+/**
+ * Similar purpose as [[org.jinilover.microservice.config.ConfigLoaderSpec]]
+ */
 object LinkStoreSpec extends DefaultRunnableSpec {
   override def spec = suite("LinkStore")(linkStoreSuite)
 
@@ -38,7 +41,7 @@ object LinkStoreSpec extends DefaultRunnableSpec {
           store   <- ZIO.access[Has[LinkStore.Service]](_.get)
           find1   <- store.getByUniqueKey(agda, idris)
           find2   <- store.getByUniqueKey(idris, agda)
-          linkExists1 = find1.isDefined || find2.isDefined
+          anyLinkAfterDbCleanup = find1.isDefined || find2.isDefined
 
           instant <- ZIO.accessM[Clock](_.get.instant)
           _       <-
@@ -47,8 +50,8 @@ object LinkStoreSpec extends DefaultRunnableSpec {
             )
           find3   <- store.getByUniqueKey(agda, idris)
           find4   <- store.getByUniqueKey(idris, agda)
-          linkExists2 = find3.isDefined || find4.isDefined
-        } yield (linkExists1, linkExists2)
+          anyLinkAfterDataInsertion = find3.isDefined || find4.isDefined
+        } yield (anyLinkAfterDbCleanup, anyLinkAfterDataInsertion)
 
       val result =
         io.provideLayer(Clock.live ++ LinkStore.live ++ Migrations.live ++ ZLayer.fromEffect(xaIO))

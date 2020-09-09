@@ -7,13 +7,20 @@ import zio._
 import org.jinilover.microservice.ConfigTypes._
 import org.jinilover.microservice.config._
 
+/**
+ * Illustrates how to write a purely FP app on top of jvm by dedicating the runtime execution
+ * of the IO monad to [[zio.App]]
+ */
 object ConfigLoaderApp extends App with LoggingSupport {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
-    (for {
-      appConfig <- ZIO.access[Has[AppConfig]](_.get).provideLayer(ConfigLoader.live)
-      _         <- logger.infoIO(s"$appConfig")
-    } yield ExitCode.success).run.map {
-      case Exit.Success(exitCode) => exitCode
-      case Exit.Failure(_)        => ExitCode.failure
-    }
+    ZIO
+      .access[Has[AppConfig]](_.get)
+      .provideLayer(ConfigLoader.live)
+      .flatMap(appConfig => logger.infoIO(s"$appConfig"))
+      .map(_ => ExitCode.success)
+      .run
+      .map {
+        case Exit.Success(exitCode) => exitCode
+        case Exit.Failure(_)        => ExitCode.failure
+      }
 }

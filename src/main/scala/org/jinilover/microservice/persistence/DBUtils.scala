@@ -7,7 +7,7 @@ import doobie.util.update.Update0
 import zio.{ Has, Task, ZIO }
 import zio.interop.catz._
 
-object DBUtiils {
+object DBUtils {
   val sql =
     s"""
       DROP SCHEMA public CASCADE;

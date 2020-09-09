@@ -6,6 +6,11 @@ import zio.test._
 
 import org.jinilover.microservice.ConfigTypes._
 
+/**
+ * Similar to [[org.jinilover.microservice.app.ConfigLoaderApp]]
+ * It doesn't need to deal with the runtime IO monad execution but dedicating the task
+ * to [[zio.test.DefaultRunnableSpec]]
+ */
 object ConfigLoaderSpec extends DefaultRunnableSpec {
   override def spec = suite("Config")(configLoaderSuite)
 
