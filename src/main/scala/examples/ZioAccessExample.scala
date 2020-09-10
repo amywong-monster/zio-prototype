@@ -22,13 +22,13 @@ object ZioAccessExample {
     for {
       name <- UIO.effectTotal(readLine)
       _    <- ZIO
-                .accessM[DbConfig](
-                  dbConfig => UIO.effectTotal(println(s"Hello, $name, do u want to connect to ${dbConfig.url}"))
-                )
+                .accessM[DbConfig] { dbConfig =>
+                  UIO.effectTotal(println(s"Hello, $name, do u want to connect to ${dbConfig.url}"))
+                }
                 .provide(DbConfig("jdbc:postgresql://localhost:5432/postgres", "postgres", "password"))
     } yield ()
 
-  // leave the dependency out of this function, preferred approach
+  // leave the dependency out of this function which is more flexible
   // this function can be called by contrivedFunc3().provide(anyConfigYouWant)
   def contrivedFunc3(): ZIO[DbConfig, Throwable, Unit] =
     for {
@@ -39,4 +39,5 @@ object ZioAccessExample {
                 )
     } yield ()
 
+  contrivedFunc3().provide(DbConfig("jdbc:postgresql://localhost:5432/postgres", "postgres", "password"))
 }
