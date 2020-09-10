@@ -12,6 +12,9 @@ import zio._
 
 import org.jinilover.microservice.ConfigTypes.DbConfig
 
+/**
+ * Db schema migrations using flyway
+ */
 object Migrations extends LoggingSupport {
   trait Service {
     def migrate: Task[Unit]
