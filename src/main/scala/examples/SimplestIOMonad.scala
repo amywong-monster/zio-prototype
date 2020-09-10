@@ -1,8 +1,8 @@
 package examples
 
-import zio.UIO
-
 import scala.io.StdIn.readLine
+
+import zio.UIO
 
 object SimplestIOMonad {
   // IO func that won't encounter error
