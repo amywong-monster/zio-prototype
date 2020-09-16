@@ -14,8 +14,6 @@ import org.jinilover.microservice.ConfigTypes.AppConfig
 object ConfigLoader {
   val live: Layer[Throwable, Has[AppConfig]] =
     ZLayer.fromEffect {
-      ZIO.fromTry {
-        Try(ConfigSource.default.at("org.jinilover.microservice").loadOrThrow[AppConfig])
-      }
+      ZIO.fromTry(Try(ConfigSource.default.loadOrThrow[AppConfig]))
     }
 }
