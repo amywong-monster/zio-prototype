@@ -9,11 +9,11 @@ scalaVersion := "2.12.7"
 organization := "org.jinilover"
 
 lazy val zioV = "1.0.1"
-lazy val doobieV = "0.8.8"
 
 // dependencies for compilation to application
-libraryDependencies += "org.tpolecat"          %% "doobie-core"        % doobieV
-libraryDependencies += "org.tpolecat"          %% "doobie-postgres"    % doobieV
+libraryDependencies ++= Seq("org.tpolecat" %% "doobie-core", "org.tpolecat" %% "doobie-postgres").map(
+  _ % "0.8.8"
+)
 libraryDependencies += "org.scalaz"            %% "scalaz-core"        % "7.2.25"
 libraryDependencies += "com.github.pureconfig" %% "pureconfig"         % "0.12.3"
 libraryDependencies += "dev.zio"               %% "zio"                % zioV
