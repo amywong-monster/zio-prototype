@@ -53,9 +53,3 @@ scalacOptions ++= Seq(
 
 // required for running zio test
 testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
-
-def testDep(group: String, version: String, pkgs: String*) =
-  dep(group, version, pkgs: _*).map(_ % "it, test").toSeq
-
-def dep(group: String, version: String, pkgs: String*) =
-  pkgs.map(group %% _ % version).toSeq
