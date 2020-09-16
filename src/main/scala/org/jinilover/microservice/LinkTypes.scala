@@ -3,17 +3,7 @@ package microservice
 
 import java.time.Instant
 
-import scalaz.{ @@, Tag }
-
 object LinkTypes {
-  type UserId = String @@ UserId.Marker
-  object UserId extends Tagger[String]
-
-  type LinkId = String @@ LinkId.Marker
-  object LinkId extends Tagger[String]
-
-  //TODO add generic taggedtype circe codec for subsequent microservice reqt
-
   sealed trait LinkStatus
   object LinkStatus {
     case object Pending extends LinkStatus
@@ -23,9 +13,9 @@ object LinkTypes {
   }
 
   case class Link(
-    id: Option[LinkId] = None,
-    initiatorId: UserId,
-    targetId: UserId,
+    id: Option[String] = None,
+    initiatorId: String,
+    targetId: String,
     status: LinkStatus,
     creationDate: Instant,
     confirmDate: Option[Instant] = None,
@@ -37,13 +27,13 @@ object LinkTypes {
   }
 
   case class SearchLinkCriteria(
-    userId: UserId,
+    userId: String,
     linkStatus: Option[LinkStatus] = None,
     isInitiator: Option[Boolean] = None
   )
 
-  def linkKey(userIds: UserId*): String =
-    userIds.map(_.unwrap).sorted.mkString("_")
+  def linkKey(userIds: String*): String =
+    userIds.sorted.mkString("_")
 
   def toLinkStatus(s: String): LinkStatus =
     if (s.toUpperCase == LinkStatus.Pending.toString.toUpperCase)

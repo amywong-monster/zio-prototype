@@ -12,7 +12,7 @@ import zio.test.Assertion._
 
 import org.jinilover.microservice.config.ConfigLoader
 import org.jinilover.microservice.ConfigTypes._
-import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus, UserId }
+import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus }
 import org.jinilover.microservice.persistence.DBUtils.createSchema
 
 /**
@@ -30,8 +30,8 @@ object LinkStoreSpec extends DefaultRunnableSpec {
     testM(
       "test `add` function - should add 1 link and handle uniqueKey violation or retrieve the link correctly"
     ) {
-      val agda = UserId("agda")
-      val idris = UserId("idris")
+      val agda = "agda"
+      val idris = "idris"
 
       val io: ZIO[Clock with Has[LinkStore.Service] with Has[Migrations.Service] with Has[
         Transactor[Task]

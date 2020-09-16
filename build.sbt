@@ -14,7 +14,6 @@ lazy val zioV = "1.0.1"
 libraryDependencies ++= Seq("org.tpolecat" %% "doobie-core", "org.tpolecat" %% "doobie-postgres").map(
   _ % "0.8.8"
 )
-libraryDependencies += "org.scalaz"            %% "scalaz-core"        % "7.2.25"
 libraryDependencies += "com.github.pureconfig" %% "pureconfig"         % "0.12.3"
 libraryDependencies += "dev.zio"               %% "zio"                % zioV
 libraryDependencies += "dev.zio"               %% "zio-interop-cats"   % "2.1.4.0"

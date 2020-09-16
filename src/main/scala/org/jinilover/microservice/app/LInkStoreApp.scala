@@ -10,7 +10,7 @@ import zio.clock.Clock
 
 import org.jinilover.microservice.config.ConfigLoader
 import org.jinilover.microservice.ConfigTypes._
-import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus, UserId }
+import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus }
 import org.jinilover.microservice.persistence.DBUtils.createSchema
 import org.jinilover.microservice.persistence.{ Doobie, LinkStore, Migrations }
 
@@ -19,8 +19,8 @@ import org.jinilover.microservice.persistence.{ Doobie, LinkStore, Migrations }
  */
 object LinkStoreApp extends App with LoggingSupport {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
-    val haskell = UserId("haskell")
-    val ocaml = UserId("ocaml")
+    val haskell = "haskell"
+    val ocaml = "ocaml"
 
     val io: ZIO[Clock with Has[LinkStore.Service] with Has[Migrations.Service] with Has[
       Transactor[Task]
