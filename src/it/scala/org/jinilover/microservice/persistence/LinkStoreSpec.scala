@@ -16,19 +16,17 @@ import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus }
 import org.jinilover.microservice.persistence.DBUtils.createSchema
 
 /**
- * Similar purpose as [[org.jinilover.microservice.config.ConfigLoaderSpec]]
+ * [[LinkStore.Service]] unit test
  */
 object LinkStoreSpec extends DefaultRunnableSpec {
   override def spec = suite("LinkStore")(linkStoreSuite)
 
-  private val dbConfigIO: Task[DbConfig] = ConfigLoader.io.map(_.db)
+  private val dbConfigLayer = ZLayer.fromEffect(ConfigLoader.io.map(_.db))
 
-  private val xaIO: Task[Transactor[Task]] = dbConfigIO.map(Doobie.transactor)
+  private val xaLayer = ZLayer.fromEffect(Doobie.transactor.provideLayer(dbConfigLayer))
 
-  private val linkStoreSuite = suite("LinkStore.Service")(
-    testM(
-      "test `add` function - should add 1 link and handle uniqueKey violation or retrieve the link correctly"
-    ) {
+  private val linkStoreSuite =
+    suite("LinkStore.Service")(testM("test `add` function - should add 1 link successfully to db") {
       val agda = "agda"
       val idris = "idris"
 
@@ -53,10 +51,9 @@ object LinkStoreSpec extends DefaultRunnableSpec {
         } yield (anyLinkAfterDbCleanup, anyLinkAfterDataInsertion)
 
       val result =
-        io.provideLayer(Clock.live ++ LinkStore.live ++ Migrations.live ++ ZLayer.fromEffect(xaIO))
-          .provideLayer(ZLayer.fromEffect(xaIO) ++ ZLayer.fromEffect(dbConfigIO))
+        io.provideLayer(Clock.live ++ LinkStore.live ++ Migrations.live ++ xaLayer)
+          .provideLayer(xaLayer ++ dbConfigLayer)
 
       assertM(result)(equalTo((false, true)))
-    }
-  )
+    })
 }

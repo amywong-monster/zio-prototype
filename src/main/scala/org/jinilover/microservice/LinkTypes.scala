@@ -3,6 +3,9 @@ package microservice
 
 import java.time.Instant
 
+/**
+ * Types for data store in database
+ */
 object LinkTypes {
   sealed trait LinkStatus
   object LinkStatus {

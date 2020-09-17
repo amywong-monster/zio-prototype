@@ -8,7 +8,7 @@ import com.github.mlangc.slf4zio.api._
 
 import org.flywaydb.core.Flyway
 
-import zio._
+import zio.{ Has, Task, ZIO, ZLayer }
 
 import org.jinilover.microservice.ConfigTypes.DbConfig
 
@@ -31,7 +31,7 @@ object Migrations extends LoggingSupport {
               flyway.migrate()
             }
           }.flatMap { i =>
-            logger.infoIO(s"$i migrations performed")
+            logger.infoIO(s"$i db scripts performed")
           }
       }
     }

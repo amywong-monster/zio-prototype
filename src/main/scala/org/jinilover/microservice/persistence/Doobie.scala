@@ -5,12 +5,10 @@ package persistence
 import java.sql.Timestamp
 import java.time.Instant
 
-import scala.reflect.runtime.universe.TypeTag
-
 import doobie._
 import doobie.implicits.javasql._
 
-import zio.Task
+import zio.{ Has, Task, URIO, ZIO }
 import zio.interop.catz._
 
 import ConfigTypes.DbConfig
@@ -23,7 +21,10 @@ object Doobie {
   implicit val InstantMeta: Meta[Instant] =
     Meta[Timestamp].timap(_.toInstant)(Timestamp.from)
 
-  def transactor(dbConfig: DbConfig): Transactor[Task] =
-    Transactor
-      .fromDriverManager[Task]("org.postgresql.Driver", dbConfig.url, dbConfig.user, dbConfig.password)
+  def transactor: URIO[Has[DbConfig], Transactor[Task]] =
+    ZIO.access[Has[DbConfig]] { hasDbConfig =>
+      val dbConfig = hasDbConfig.get
+      Transactor
+        .fromDriverManager[Task]("org.postgresql.Driver", dbConfig.url, dbConfig.user, dbConfig.password)
+    }
 }

@@ -10,7 +10,7 @@ import doobie.Transactor
 import doobie.syntax.connectionio._
 import doobie.syntax.string._
 
-import zio._
+import zio.{ Has, Task, ZLayer }
 import zio.interop.catz._
 
 import org.jinilover.microservice.LinkTypes.{ Link, LinkStatus, SearchLinkCriteria, linkKey }

@@ -2,7 +2,7 @@ package org.jinilover.microservice.app
 
 import com.github.mlangc.slf4zio.api._
 
-import zio.{ App, Exit, ExitCode, URIO}
+import zio.{ App, Exit, ExitCode, URIO }
 
 import org.jinilover.microservice.config.ConfigLoader
 
