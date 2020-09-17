@@ -14,6 +14,9 @@ import zio.interop.catz._
 import ConfigTypes.DbConfig
 import LinkTypes.{ LinkStatus, toLinkStatus }
 
+/**
+ * Maps data types to database compatible types
+ */
 object Doobie {
   implicit val LinkStatusMeta: Meta[LinkStatus] =
     Meta[String].timap(toLinkStatus)(_.toString)
