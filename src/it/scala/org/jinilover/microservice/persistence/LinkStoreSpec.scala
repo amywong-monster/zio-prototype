@@ -21,8 +21,7 @@ import org.jinilover.microservice.persistence.DBUtils.createSchema
 object LinkStoreSpec extends DefaultRunnableSpec {
   override def spec = suite("LinkStore")(linkStoreSuite)
 
-  private val dbConfigIO: Task[DbConfig] =
-    ZIO.access[Has[AppConfig]](_.get.db).provideLayer(ConfigLoader.live)
+  private val dbConfigIO: Task[DbConfig] = ConfigLoader.io.map(_.db)
 
   private val xaIO: Task[Transactor[Task]] = dbConfigIO.map(Doobie.transactor)
 

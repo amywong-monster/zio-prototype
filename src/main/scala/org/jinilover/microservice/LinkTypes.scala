@@ -9,7 +9,7 @@ object LinkTypes {
     case object Pending extends LinkStatus
     case object Accepted extends LinkStatus
 
-    //TODO add `LinkStatus` circe codec for subsequent microservice reqt
+    //TODO add `LinkStatus` json codec for subsequent REST service reqt
   }
 
   case class Link(
@@ -23,7 +23,7 @@ object LinkTypes {
   )
 
   object Link {
-    //TODO add `Link` circe codec for subsequent microservice reqt
+    //TODO add `Link` circe json for subsequent REST service reqt
   }
 
   case class SearchLinkCriteria(
