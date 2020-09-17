@@ -2,20 +2,18 @@ package org.jinilover.microservice.app
 
 import com.github.mlangc.slf4zio.api._
 
-import zio._
+import zio.{ App, Exit, ExitCode, URIO}
 
-import org.jinilover.microservice.ConfigTypes._
-import org.jinilover.microservice.config._
+import org.jinilover.microservice.config.ConfigLoader
 
 /**
- * Illustrates how to write a purely FP app on top of jvm by dedicating the runtime execution
- * of the IO monad to [[zio.App]]
+ * An application illustrates how to call [[ConfigLoader]].
+ * The difference from [[scala.App]] is this is purely functional by using IO monad to deal with interaction
+ * with the external system (in this case is file and console).  It dedicates the IO monad execution to [[zio.App]]
  */
 object ConfigLoaderApp extends App with LoggingSupport {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] =
-    ZIO
-      .access[Has[AppConfig]](_.get)
-      .provideLayer(ConfigLoader.live)
+    ConfigLoader.io
       .flatMap(appConfig => logger.infoIO(s"$appConfig"))
       .map(_ => ExitCode.success)
       .run

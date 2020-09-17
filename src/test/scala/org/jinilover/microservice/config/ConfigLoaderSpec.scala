@@ -1,26 +1,25 @@
 package org.jinilover.microservice.config
 
-import zio._
-import zio.test.Assertion._
-import zio.test._
+import zio.test.Assertion.equalTo
+import zio.test.{ DefaultRunnableSpec, assertM, suite, testM }
 
 import org.jinilover.microservice.ConfigTypes._
 
 /**
- * Similar to [[org.jinilover.microservice.app.ConfigLoaderApp]]
- * It doesn't need to deal with the runtime IO monad execution but dedicating the task
- * to [[zio.test.DefaultRunnableSpec]]
+ * [[ConfigLoader]] unit test
+ * Like [[org.jinilover.microservice.app.ConfigLoaderApp]],
+ * it doesn't need to deal with the IO monad execution but dedicating the work
+ * to [[DefaultRunnableSpec]]
  */
 object ConfigLoaderSpec extends DefaultRunnableSpec {
   override def spec = suite("Config")(configLoaderSuite)
 
   private val configLoaderSuite =
-    suite("Config.Loader")(testM("test `load` function") {
-      val io: Task[AppConfig] = ZIO.access[Has[AppConfig]](_.get).provideLayer(ConfigLoader.live)
+    suite("ConfigLoader")(testM("test if it loads config information correct from application.conf") {
       val expected = AppConfig(
         DbConfig("jdbc:postgresql://localhost:5432/postgres", "postgres", "password"),
         WebServerConfig("0.0.0.0", 8080)
       )
-      assertM(io)(equalTo(expected))
+      assertM(ConfigLoader.io)(equalTo(expected))
     })
 }
