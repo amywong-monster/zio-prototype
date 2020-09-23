@@ -22,6 +22,7 @@ object LinkStoreApp extends App with LoggingSupport {
     val agda = "agda"
     val idris = "idris"
 
+    // illustrate how to insert the record
     val io: ZIO[Clock with Has[LinkStore.Service] with Has[Migrations.Service] with Has[
       Transactor[Task]
     ], Throwable, Unit] =
@@ -57,11 +58,7 @@ object LinkStoreApp extends App with LoggingSupport {
       .provideLayer(Clock.live ++ LinkStore.live ++ Migrations.live ++ xaLayer)
       .provideLayer(xaLayer ++ dbConfigLayer)
       .map(_ => ExitCode.success)
-      .run
-      .map {
-        case Exit.Success(exitCode) => exitCode
-        case Exit.Failure(_)        => ExitCode.failure
-      }
+      .exitCode
 
   }
 }

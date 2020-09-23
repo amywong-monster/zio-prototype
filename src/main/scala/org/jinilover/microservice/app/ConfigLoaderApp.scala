@@ -16,9 +16,5 @@ object ConfigLoaderApp extends App with LoggingSupport {
     ConfigLoader.io
       .flatMap(appConfig => logger.infoIO(s"$appConfig"))
       .map(_ => ExitCode.success)
-      .run
-      .map {
-        case Exit.Success(exitCode) => exitCode
-        case Exit.Failure(_)        => ExitCode.failure
-      }
+      .exitCode
 }
